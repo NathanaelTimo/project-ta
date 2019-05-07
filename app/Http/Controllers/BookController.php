@@ -5,10 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Imports\BooksImport;
 use Illuminate\Http\Request;
+use DataTables;
 use DB;
 
 class BookController extends Controller
 {
+    public function getData(Request $req)
+    {
+        $model = Book::query()->with(['categories']);
+
+        return DataTables::eloquent($model)->toJson();
+    }
     public function index()
     {
         //

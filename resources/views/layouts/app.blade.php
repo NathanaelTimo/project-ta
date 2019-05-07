@@ -15,6 +15,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
 </head>
 <body>
     <div id="app">
@@ -74,7 +75,17 @@
         </main>
     </div>
     <!-- Scripts -->
-    <!-- <script src="{{ asset('js/app.js') }}" defer></script> -->
+    <!--<script src="{{ asset('js/app.js') }}" defer></script>-->
+    <!-- jQuery -->
+    <script
+        src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous">
+    </script>
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
     <script src="{{ asset('js/vue.min.js') }}"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     @include('sweetalert::alert')

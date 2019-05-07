@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
   <div class="row justify-content-center">
-    <div class="col-md-8">
+    <div class="col-md-10">
       <div class="card">
         <div class="card-header">Dashboard</div>
 
@@ -16,12 +16,32 @@
 
           You are logged in! @{{ message }}
           <br>
-          <a :href="url_download" class="btn btn-warning pull-right">Download Template</a>
           <div class="form-group row">
             <label class="col-md-3 col-form-label text-md-right">File</label>
-            <div class="col-md-7">
+            <div class="col-md-9">
               <input type="file" id="file" class="btn btn-default" ref="file" @change="handleFileUpload()">
               <button @click="submitFile()" class="btn btn-primary" :disabled="disabled">Import File</button>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6">
+              <a :href="url_download" class="btn btn-warning float-right">Download Template</a>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-12">
+              <table class="table table-bordered" id="books-table">
+                <thead>
+                  <tr>
+                    <th>Id</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>QTY</th>
+                    <th>Created At</th>
+                    <th>Updated At</th>
+                  </tr>
+                </thead>
+              </table>
             </div>
           </div>
         </div>
@@ -33,6 +53,22 @@
 
 @push('scripts')
 <script type="text/javascript">
+$(document).ready(function() {
+  var tables = $('#books-table').DataTable({
+    processing: true,
+    serverSide: true,
+    ajax: 'book/get-data',
+    columns: [
+      { data: 'id', name: 'id' },
+      { data: 'title', name: 'title' },
+      { data: 'categories.name', name: 'categories.name' },
+      { data: 'qty', name: 'qty' },
+      { data: 'created_at', name: 'created_at' },
+      { data: 'updated_at', name: 'updated_at' }
+    ]
+  });
+});
+
 var app = new Vue({
   el: '#app',
   data: {
@@ -52,11 +88,9 @@ var app = new Vue({
       })
       if(data.success) {
         alert('success');
-        //this.$toastr('success',this.$t('common.data_saved_successfully'),this.$t('common.success'));
-        //this.$eventHub.$emit('refresh-ajaxtable', 'data-alih-tugas');
+        $('#books-table').DataTable().ajax.reload();
       }
       else {
-        //this.$toastr('error',data.message ? data.message : this.$t('error_fault'),this.$t('error'));
         alert('error');
         console.log(data.console);
       }

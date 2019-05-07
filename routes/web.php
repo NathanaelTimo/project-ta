@@ -19,6 +19,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['prefix' => 'book'], function() {
-	Route::post('import','BookController@import');
-	Route::get('download-template','BookController@downloadTemplate');
+	Route::get('get-data', 'BookController@getData');
+	Route::post('import', 'BookController@import');
+	Route::get('download-template', 'BookController@downloadTemplate');
 });
