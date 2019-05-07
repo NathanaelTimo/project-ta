@@ -74,7 +74,10 @@
         </main>
     </div>
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    <!-- <script src="{{ asset('js/app.js') }}" defer></script> -->
+    <script src="{{ asset('js/vue.min.js') }}"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     @include('sweetalert::alert')
+    @stack('scripts')
 </body>
 </html>
