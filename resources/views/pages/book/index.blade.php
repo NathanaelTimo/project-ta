@@ -56,7 +56,7 @@ $(document).ready(function() {
     ]
   });
   tables.on('order.dt search.dt', function () {
-    tables.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+    tables.column(0, {search:'applied', order:'applied'}).nodes().each(function (cell, i) {
       cell.innerHTML = i+1;
     });
   }).draw();
@@ -65,7 +65,6 @@ $(document).ready(function() {
 var app = new Vue({
   el: '#app',
   data: {
-    message: 'Hello Vue!',
     file: '',
     disabled: true,
     url_download: 'book/download-template',

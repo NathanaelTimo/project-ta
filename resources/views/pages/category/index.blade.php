@@ -15,6 +15,9 @@
                   <tr>
                     <th>No.</th>
                     <th>Name</th>
+                    <th>Book(s) QTY</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
                   </tr>
                 </thead>
               </table>
@@ -34,13 +37,25 @@ $(document).ready(function() {
     processing: true,
     serverSide: true,
     ajax: 'category/get-data',
+    order: [[ 1, 'asc' ]],
     columns: [
-      { data: 'id', name: 'id' },
+      { data: 'id', name: 'id', searchable: false },
       { data: 'name', name: 'name' },
+      { data: 'books_count', name: 'books_count', searchable: false },
+      /* EDIT */ {
+        mRender: function (data, type, row) {
+          return '<a class="table-edit" data-id="' + row['id'] + '">EDIT</a>'
+        }
+      },
+      /* DELETE */ {
+        mRender: function (data, type, row) {
+          return '<a class="table-delete" data-id="' + row['id'] + '">DELETE</a>'
+        }
+      },
     ]
   });
   tables.on('order.dt search.dt', function () {
-    tables.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+    tables.column(0, {search:'applied', order:'applied'}).nodes().each(function (cell, i) {
       cell.innerHTML = i+1;
     });
   }).draw();
@@ -49,7 +64,6 @@ $(document).ready(function() {
 var app = new Vue({
   el: '#app',
   data: {
-    message: 'Hello Vue!',
     file: '',
     disabled: true,
     url_download: 'book/download-template',

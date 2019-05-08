@@ -10,7 +10,7 @@ class CategoryController extends Controller
 {
     public function getData(Request $req)
     {
-        $model = Category::query();
+        $model = Category::query()->withCount('books');
 
         return DataTables::eloquent($model)->toJson();
     }

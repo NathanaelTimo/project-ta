@@ -16,12 +16,12 @@ class CreateBooksTable extends Migration
         Schema::create('books', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
-            $table->unsignedInteger('categories_id');
+            $table->unsignedInteger('category_id');
             $table->unsignedInteger('qty');
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('categories_id')->references('id')->on('categories');
+            $table->foreign('category_id')->references('id')->on('categories');
         });
     }
 
