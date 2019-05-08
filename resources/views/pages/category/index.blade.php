@@ -9,26 +9,12 @@
 
         <div class="card-body">
           <div class="form-group row">
-            <label class="col-md-3 col-form-label text-md-right">File</label>
-            <div class="col-md-9">
-              <input type="file" id="file" class="btn btn-default" ref="file" @change="handleFileUpload()">
-              <button @click="submitFile()" class="btn btn-primary" :disabled="disabled">Import File</button>
-            </div>
-          </div>
-          <div class="form-group row">
-            <div class="col-md-6">
-              <a :href="url_download" class="btn btn-warning float-right">Download Template</a>
-            </div>
-          </div>
-          <div class="form-group row">
             <div class="col-md-12">
-              <table class="table table-bordered" id="books-table">
+              <table class="table table-bordered" id="categories-table">
                 <thead>
                   <tr>
                     <th>No.</th>
-                    <th>Title</th>
-                    <th>Category</th>
-                    <th>QTY</th>
+                    <th>Name</th>
                   </tr>
                 </thead>
               </table>
@@ -44,15 +30,13 @@
 @push('scripts')
 <script type="text/javascript">
 $(document).ready(function() {
-  var tables = $('#books-table').DataTable({
+  var tables = $('#categories-table').DataTable({
     processing: true,
     serverSide: true,
-    ajax: 'book/get-data',
+    ajax: 'category/get-data',
     columns: [
       { data: 'id', name: 'id' },
-      { data: 'title', name: 'title' },
-      { data: 'categories.name', name: 'categories.name' },
-      { data: 'qty', name: 'qty' },
+      { data: 'name', name: 'name' },
     ]
   });
   tables.on('order.dt search.dt', function () {

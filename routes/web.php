@@ -25,6 +25,10 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::post('import', 'BookController@import');
 		Route::get('download-template', 'BookController@downloadTemplate');
 	});
-
 	Route::resource('book', 'BookController');
+
+	Route::group(['prefix' => 'category'], function() {
+		Route::get('get-data', 'CategoryController@getData');
+	});
+	Route::apiResource('category', 'CategoryController');
 });

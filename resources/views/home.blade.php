@@ -9,7 +9,7 @@
 
         <div class="card-body">
           <a href="{{ route('book.index') }}">Book</a><br>
-          <a href="">Category</a>
+          <a href="{{ route('category.index') }}">Category</a>
         </div>
       </div>
     </div>

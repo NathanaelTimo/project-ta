@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Book;
 use App\Imports\BooksImport;
-use Illuminate\Http\Request;
 use DataTables;
 use DB;
 
@@ -16,6 +16,7 @@ class BookController extends Controller
 
         return DataTables::eloquent($model)->toJson();
     }
+
     public function index()
     {
         return view('pages.book.index');

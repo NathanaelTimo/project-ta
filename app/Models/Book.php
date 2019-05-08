@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Book extends Model
 {
     use SoftDeletes;
-    protected $guarded = ['price'];
+    protected $guarded = ['id'];
 
     public function categories()
     {
