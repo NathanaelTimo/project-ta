@@ -98,7 +98,16 @@
     <!-- Bootstrap JavaScript -->
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
     @include('sweetalert::alert')
+    <script type="text/javascript">
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500
+        });
+    </script>
     @stack('scripts')
 </body>
 </html>

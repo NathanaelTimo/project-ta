@@ -16,8 +16,7 @@
                     <th>No.</th>
                     <th>Name</th>
                     <th>Book(s) QTY</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
               </table>
@@ -28,6 +27,9 @@
     </div>
   </div>
 </div>
+
+@component('components.modal_edit', ['title' => 'Edit Category'])
+@endcomponent
 @endsection
 
 @push('scripts')
@@ -42,15 +44,10 @@ $(document).ready(function() {
       { data: 'id', name: 'id', searchable: false },
       { data: 'name', name: 'name' },
       { data: 'books_count', name: 'books_count', searchable: false },
-      /* EDIT */ {
-        mRender: function (data, type, row) {
-          return '<a class="table-edit" data-id="' + row['id'] + '">EDIT</a>'
-        }
-      },
-      /* DELETE */ {
-        mRender: function (data, type, row) {
-          return '<a class="table-delete" data-id="' + row['id'] + '">DELETE</a>'
-        }
+      /* ACTION */ {
+        render: function (data, type, row) {
+          return "<button onclick='modalEdit("+row.id+")' class='btn btn-sm btn-primary'>Edit</button>&nbsp;<button onclick='return checkDelete("+row.id+")' class='btn btn-sm btn-danger'>Delete</button>";
+        }, orderable: false, searchable: false
       },
     ]
   });
@@ -61,6 +58,25 @@ $(document).ready(function() {
   }).draw();
 });
 
+function modalEdit(id) {
+  app.update(id);
+}
+
+function checkDelete(id) {
+  Swal.fire({
+    title: 'Are you sure?',
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes'
+  }).then((result) => {
+    if(result.value) {
+      app.delete(id);
+    }
+  })
+}
+
 var app = new Vue({
   el: '#app',
   data: {
@@ -69,29 +85,22 @@ var app = new Vue({
     url_download: 'book/download-template',
   },
   methods: {
-    async submitFile() {
-      let formData = new FormData();
-      formData.append('file', this.file);
-      const { data } = await axios.post('book/import', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      })
-      if(data.success) {
-        alert('success');
-        $('#books-table').DataTable().ajax.reload();
-      }
-      else {
-        alert('error');
-        console.log(data.console);
-      }
+    update: function(id) {
+      $("#modal-category-edit").modal('show');
     },
-    handleFileUpload: function() {
-      this.file = this.$refs.file.files[0];
-      if(this.file) {
-        this.disabled = false;
+    async delete(id) {
+      try {
+        const response = await axios.delete('category/'+id);
+        $('#categories-table').DataTable().ajax.reload();
+        Toast.fire({
+          type: 'success',
+          title: 'Deleted'
+        });
+        console.log(response);
+      } catch (error) {
+        console.error(error);
       }
-    },
+    }
   }
 })
 </script>
