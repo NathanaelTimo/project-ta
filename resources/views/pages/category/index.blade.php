@@ -28,7 +28,7 @@
   </div>
 </div>
 
-@component('components.modal_edit', ['title' => 'Edit Category'])
+@component('components.modal_category_edit', ['title' => 'Edit Category'])
 @endcomponent
 @endsection
 
@@ -46,7 +46,7 @@ $(document).ready(function() {
       { data: 'books_count', name: 'books_count', searchable: false },
       /* ACTION */ {
         render: function (data, type, row) {
-          return "<button onclick='modalEdit("+row.id+")' class='btn btn-sm btn-primary'>Edit</button>&nbsp;<button onclick='return checkDelete("+row.id+")' class='btn btn-sm btn-danger'>Delete</button>";
+          return "<button id='modal-edit' class='btn btn-sm btn-primary' data-id='"+row.id+"' data-name='"+row.name+"'>Edit</button>&nbsp;<button onclick='checkDelete("+row.id+")' class='btn btn-sm btn-danger'>Delete</button>";
         }, orderable: false, searchable: false
       },
     ]
@@ -58,9 +58,11 @@ $(document).ready(function() {
   }).draw();
 });
 
-function modalEdit(id) {
-  app.update(id);
-}
+$(document).on('click', '#modal-edit',function() {
+  app.id = ($(this).data('id'));
+  app.name = ($(this).data('name'));
+  $("#modal-category-edit").modal('show');
+});
 
 function checkDelete(id) {
   Swal.fire({
@@ -83,10 +85,25 @@ var app = new Vue({
     file: '',
     disabled: true,
     url_download: 'book/download-template',
+    id: '',
+    name: '',
   },
   methods: {
-    update: function(id) {
-      $("#modal-category-edit").modal('show');
+    async update(id) {
+      try {
+        const response = await axios.patch('category/'+app.id, {
+          name: this.name,
+        });
+        $("#modal-category-edit").modal('hide');
+        $('#categories-table').DataTable().ajax.reload();
+        Toast.fire({
+          type: 'success',
+          title: 'Updated'
+        });
+        console.log(response);
+      } catch(error) {
+        console.error(error);
+      }
     },
     async delete(id) {
       try {
@@ -97,7 +114,7 @@ var app = new Vue({
           title: 'Deleted'
         });
         console.log(response);
-      } catch (error) {
+      } catch(error) {
         console.error(error);
       }
     }

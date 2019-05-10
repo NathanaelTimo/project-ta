@@ -20,7 +20,7 @@ class CategoryController extends Controller
         return view('pages.category.index');
     }
 
-    public function store(Request $request)
+    public function store(Request $req)
     {
         //
     }
@@ -30,14 +30,19 @@ class CategoryController extends Controller
         //
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $req, $id)
     {
-        //
+        $model = Category::findOrFail($id);
+        $model->update([
+            'name' => $req->name,
+        ]);
+
+        return response()->json(['success' => true]);
     }
 
     public function destroy($id)
     {
-        $model = Category::find($id);
+        $model = Category::findOrFail($id);
         $model->delete();
     
         return response()->json(['success' => true]);

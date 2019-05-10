@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Category extends Model
 {
     protected $guarded = ['id'];
+    public $timestamps = false;
 
     public function books()
     {

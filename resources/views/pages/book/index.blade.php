@@ -93,6 +93,22 @@ var app = new Vue({
         this.disabled = false;
       }
     },
+    update: function(id) {
+      $("#modal-book-edit").modal('show');
+    },
+    async delete(id) {
+      try {
+        const response = await axios.delete('book/'+id);
+        $('#books-table').DataTable().ajax.reload();
+        Toast.fire({
+          type: 'success',
+          title: 'Deleted'
+        });
+        console.log(response);
+      } catch (error) {
+        console.error(error);
+      }
+    }
   }
 })
 </script>
