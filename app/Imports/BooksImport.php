@@ -17,11 +17,11 @@ class BooksImport implements ToModel, WithHeadingRow, WithBatchInserts, WithChun
     public function model(array $row)
     {
         $category = $row['category'];
-        $category_id = Category::where('name', 'LIKE', "%$category%")->first();
+        $categories_id = Category::where('name', 'LIKE', "%$category%")->first();
 
         return new Book([
             'title' => $row['title'],
-            'category_id' => $category_id->id,
+            'categories_id' => $categories_id->id,
             'qty' => $row['qty'],
         ]);
     }

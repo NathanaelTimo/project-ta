@@ -29,6 +29,7 @@
                     <th>Title</th>
                     <th>Category</th>
                     <th>QTY</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
               </table>
@@ -53,6 +54,11 @@ $(document).ready(function() {
       { data: 'title', name: 'title' },
       { data: 'categories.name', name: 'categories.name' },
       { data: 'qty', name: 'qty' },
+      /* ACTION */ {
+        render: function (data, type, row) {
+          return "<button id='modal-edit' class='btn btn-sm btn-primary' data-id='"+row.id+"' data-name='"+row.name+"'>Edit</button>&nbsp;<button onclick='checkDelete("+row.id+")' class='btn btn-sm btn-danger'>Delete</button>";
+        }, orderable: false, searchable: false
+      },
     ]
   });
   tables.on('order.dt search.dt', function () {
@@ -61,6 +67,21 @@ $(document).ready(function() {
     });
   }).draw();
 });
+
+function checkDelete(id) {
+  Swal.fire({
+    title: 'Are you sure?',
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes'
+  }).then((result) => {
+    if(result.value) {
+      app.delete(id);
+    }
+  })
+}
 
 var app = new Vue({
   el: '#app',
@@ -79,7 +100,10 @@ var app = new Vue({
         }
       })
       if(data.success) {
-        alert('success');
+        Toast.fire({
+          type: 'success',
+          title: 'Imported'
+        });
         $('#books-table').DataTable().ajax.reload();
       }
       else {
