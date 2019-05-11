@@ -5,9 +5,14 @@
   <div class="row justify-content-center">
     <div class="col-md-10">
       <div class="card">
-        <div class="card-header">Dashboard</div>
+        <div class="card-header">Category</div>
 
         <div class="card-body">
+          <div class="form-group row">
+            <div class="col-md-3">
+              <button @click="create()" class="btn btn-primary">Create</button>
+            </div>
+          </div>
           <div class="form-group row">
             <div class="col-md-12">
               <table class="table table-bordered" id="categories-table">
@@ -28,8 +33,11 @@
   </div>
 </div>
 
+@component('components.modal_category_create', ['title' => 'Create Category'])
+@endcomponent
 @component('components.modal_category_edit', ['title' => 'Edit Category'])
 @endcomponent
+
 @endsection
 
 @push('scripts')
@@ -89,6 +97,27 @@ var app = new Vue({
     name: '',
   },
   methods: {
+    async create(submit) {
+      if(submit) {
+        try {
+          const response = await axios.post('category/', {
+            name: this.name,
+          });
+          $("#modal-category-create").modal('hide');
+          $('#categories-table').DataTable().ajax.reload();
+          Toast.fire({
+            type: 'success',
+            title: 'Created'
+          });
+          console.log(response);
+        } catch(error) {
+          console.error(error);
+        }
+      }
+      else {
+        $("#modal-category-create").modal('show');
+      }
+    },
     async update(id) {
       try {
         const response = await axios.patch('category/'+app.id, {

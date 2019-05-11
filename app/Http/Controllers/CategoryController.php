@@ -22,7 +22,11 @@ class CategoryController extends Controller
 
     public function store(Request $req)
     {
-        //
+        Category::create([
+            'name' => $req->name,
+        ]);
+
+        return response()->json(['success' => true]);
     }
 
     public function show($id)

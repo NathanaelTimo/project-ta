@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
         DB::table('categories')->insert([
         	['name' => 'Art'],
         	['name' => 'Comic book'],
+            ['name' => 'Fiction'],
         	['name' => 'Health'],
         	['name' => 'History'],
         	['name' => 'Science fiction']
