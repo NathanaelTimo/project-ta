@@ -7,13 +7,34 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <p>Modal body text goes here.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Save</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
+      <form class="was-validated" @submit.prevent="update">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" class="form-control" v-model="title" required>
+            <div class="invalid-feedback">Required</div>
+          </div>
+          <div class="form-group">
+            <multiselect
+              v-model="categories_id"
+              :options="listCategories"
+              placeholder="Select Category"
+              label="name"
+              track-by="id">
+            </multiselect>
+            <div class="invalid-feedback">Required</div>
+          </div>
+          <div class="form-group">
+            <label>QTY</label>
+            <input type="text" class="form-control" v-model="qty" required>
+            <div class="invalid-feedback">Required</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

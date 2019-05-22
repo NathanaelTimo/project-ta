@@ -46,7 +46,7 @@ $(document).ready(function() {
   var tables = $('#categories-table').DataTable({
     processing: true,
     serverSide: true,
-    ajax: 'category/get-data',
+    ajax: 'category/get-datatables',
     order: [[ 1, 'asc' ]],
     columns: [
       { data: 'id', name: 'id', searchable: false },
@@ -90,9 +90,6 @@ function checkDelete(id) {
 var app = new Vue({
   el: '#app',
   data: {
-    file: '',
-    disabled: true,
-    url_download: 'book/download-template',
     id: '',
     name: '',
   },
@@ -100,7 +97,7 @@ var app = new Vue({
     async create(submit) {
       if(submit) {
         try {
-          const response = await axios.post('category/', {
+          const response = await axios.post('category', {
             name: this.name,
           });
           $("#modal-category-create").modal('hide');

@@ -16,6 +16,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
 </head>
 <body>
@@ -99,6 +100,7 @@
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
+    <!-- SweetAlert -->
     @include('sweetalert::alert')
     <script type="text/javascript">
         const Toast = Swal.mixin({
@@ -108,6 +110,9 @@
             timer: 1500
         });
     </script>
+
+    <!-- Vue-Multiselect -->
+    <script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
     @stack('scripts')
 </body>
 </html>

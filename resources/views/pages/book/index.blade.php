@@ -40,6 +40,10 @@
     </div>
   </div>
 </div>
+
+@component('components.modal_book_edit', ['title' => 'Edit Book'])
+@endcomponent
+
 @endsection
 
 @push('scripts')
@@ -56,7 +60,7 @@ $(document).ready(function() {
       { data: 'qty', name: 'qty' },
       /* ACTION */ {
         render: function (data, type, row) {
-          return "<button id='modal-edit' class='btn btn-sm btn-primary' data-id='"+row.id+"' data-name='"+row.name+"'>Edit</button>&nbsp;<button onclick='checkDelete("+row.id+")' class='btn btn-sm btn-danger'>Delete</button>";
+          return "<button id='modal-edit' class='btn btn-sm btn-primary' data-id='"+row.id+"' data-title='"+row.title+"' data-categories-id='"+row.categories_id+"' data-qty='"+row.qty+"'>Edit</button>&nbsp;<button onclick='checkDelete("+row.id+")' class='btn btn-sm btn-danger'>Delete</button>";
         }, orderable: false, searchable: false
       },
     ]
@@ -66,6 +70,16 @@ $(document).ready(function() {
       cell.innerHTML = i+1;
     });
   }).draw();
+});
+
+$(document).on('click', '#modal-edit',function() {
+  app.id = ($(this).data('id'));
+  app.title = ($(this).data('title'));
+  app.categories_id = ($(this).data('categories-id'));
+  app.qty = ($(this).data('qty'));
+  let obj = app.listCategories.find(o => o['id'] == app.categories_id);
+  app.categories_id = obj;
+  $("#modal-book-edit").modal('show');
 });
 
 function checkDelete(id) {
@@ -83,12 +97,21 @@ function checkDelete(id) {
   })
 }
 
+Vue.component('multiselect', window.VueMultiselect.default);
 var app = new Vue({
   el: '#app',
   data: {
     file: '',
     disabled: true,
     url_download: 'book/download-template',
+    id: '',
+    title: '',
+    categories_id: '',
+    qty: '',
+    listCategories: [],
+  },
+  created() {
+    this.getCategory();
   },
   methods: {
     async submitFile() {
@@ -117,8 +140,32 @@ var app = new Vue({
         this.disabled = false;
       }
     },
-    update: function(id) {
-      $("#modal-book-edit").modal('show');
+    async getCategory() {
+      try {
+        const response = await axios.get('category/get-datatables');
+        this.listCategories = response.data.data;
+        console.log(response);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async update(id) {
+      try {
+        const response = await axios.patch('book/'+app.id, {
+          title: this.title,
+          categories: this.categories_id,
+          qty: this.qty,
+        });
+        $('#modal-book-edit').modal('hide');
+        $('#books-table').DataTable().ajax.reload();
+        Toast.fire({
+          type: 'success',
+          title: 'Updated'
+        });
+        console.log(response);
+      } catch(error) {
+        console.error(error);
+      }
     },
     async delete(id) {
       try {

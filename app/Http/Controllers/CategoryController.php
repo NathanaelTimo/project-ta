@@ -8,7 +8,7 @@ use DataTables;
 
 class CategoryController extends Controller
 {
-    public function getData(Request $req)
+    public function getDatatables(Request $req)
     {
         $model = Category::query()->withCount('books');
 

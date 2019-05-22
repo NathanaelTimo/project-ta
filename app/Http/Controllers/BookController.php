@@ -42,9 +42,16 @@ class BookController extends Controller
         //
     }
 
-    public function update(Request $request, Book $book)
+    public function update(Request $req, $id)
     {
-        //
+        $model = Book::findOrFail($id);
+        $model->update([
+            'title' => $req->title,
+            'categories_id' => $req->categories['id'],
+            'qty' => $req->qty,
+        ]);
+
+        return response()->json(['success' => true]);
     }
 
     public function destroy($id)
