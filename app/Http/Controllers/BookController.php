@@ -77,11 +77,21 @@ class BookController extends Controller
 
     public function import(Request $req)
     {
+        $filename = $_FILES['file']['name'];
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
         if($req->file) {
             DB::beginTransaction();
             $data = new BooksImport();
             try {
-                $data->import($req->file);
+                switch($ext) {
+                    case 'csv':
+                        $data->import($req->file, null, \Maatwebsite\Excel\Excel::CSV);
+                        break;
+                    
+                    case 'xlsx':
+                        $data->import($req->file, null, \Maatwebsite\Excel\Excel::XLSX);
+                        break;
+                }                
                 DB::commit();
                 return response()->json(['success' => true]);
             } catch(\Illuminate\Database\QueryException $ex) {
@@ -97,12 +107,23 @@ class BookController extends Controller
         }
     }
 
-    public function downloadTemplate()
+    public function downloadTemplateXlsx()
     {
         $headers = [
             'Content-Type' => 'application/pdf',
         ];
-        $file = 'template_import';
-        return response()->download(storage_path('app/template/'.$file.'.xlsx'),$file.'.xlsx',$headers);
+        $file = 'template_import_xlsx';
+        $ext = '.xlsx';
+        return response()->download(storage_path('app/template/'.$file.$ext), $file.$ext, $headers);
+    }
+
+    public function downloadTemplateCsv()
+    {
+        $headers = [
+            'Content-Type' => 'application/pdf',
+        ];
+        $file = 'template_import_csv';
+        $ext = '.csv';
+        return response()->download(storage_path('app/template/'.$file.$ext), $file.$ext, $headers);
     }
 }

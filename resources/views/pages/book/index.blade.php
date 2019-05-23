@@ -16,8 +16,11 @@
             </div>
           </div>
           <div class="form-group row">
-            <div class="col-md-6">
-              <a :href="url_download" class="btn btn-warning float-right">Download Template</a>
+            <div class="col-md-3">
+              <a :href="url_download.csv" class="btn btn-warning float-right">Download Template CSV</a>
+            </div>
+            <div class="col-md-3">
+              <a :href="url_download.xlsx" class="btn btn-warning float-right">Download Template XLSX</a>
             </div>
           </div>
           <div class="form-group row">
@@ -103,7 +106,10 @@ var app = new Vue({
   data: {
     file: '',
     disabled: true,
-    url_download: 'book/download-template',
+    url_download: {
+      xlsx: 'book/download-template-xlsx',
+      csv: 'book/download-template-csv',
+    },
     id: '',
     title: '',
     categories_id: '',

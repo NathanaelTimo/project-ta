@@ -24,7 +24,8 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('get-data', 'BookController@getData');
 		Route::get('get-chart', 'BookController@getChart');
 		Route::post('import', 'BookController@import');
-		Route::get('download-template', 'BookController@downloadTemplate');
+		Route::get('download-template-xlsx', 'BookController@downloadTemplateXlsx');
+		Route::get('download-template-csv', 'BookController@downloadTemplateCsv');
 	});
 
 	Route::group(['prefix' => 'category'], function() {
