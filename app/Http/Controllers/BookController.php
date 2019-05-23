@@ -12,7 +12,7 @@ class BookController extends Controller
 {
     public function getData(Request $req)
     {
-        $model = Book::query()->with(['categories']);
+        $model = Book::with(['categories']);
 
         return DataTables::eloquent($model)->toJson();
     }

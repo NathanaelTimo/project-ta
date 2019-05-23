@@ -28,6 +28,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 	Route::group(['prefix' => 'category'], function() {
 		Route::get('get-datatables', 'CategoryController@getDatatables');
+		Route::get('get-chart', 'CategoryController@getChart');
 	});
 
 	Route::apiResource('book', 'BookController');
