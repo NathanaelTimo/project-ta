@@ -10,10 +10,17 @@
         <div class="card-body">
           <a href="{{ route('book.index') }}">Book</a><br>
           <a href="{{ route('category.index') }}">Category</a>
-          <line-chart
-            v-if="loaded"
-            :chart-label="label"
-            :chart-data="data"/>
+          <bar-chart
+            :chart-id="category.id"
+            :chart-title="category.title"
+            :chart-url="category.url"
+            :chart-bgcolor="category.bgcolor">
+          </bar-chart>
+          <bar-chart
+            :chart-id="book.id"
+            :chart-title="book.title"
+            :chart-url="book.url"
+            :chart-bgcolor="book.bgcolor">            
         </div>
       </div>
     </div>
@@ -23,56 +30,76 @@
 
 @push('scripts')
 <script type="text/javascript">
-Vue.component('line-chart', {
+Vue.component('bar-chart', {
   extends: VueChartJs.Bar,
-  props: ['chartLabel', 'chartData'],
+  props: ['chartTitle', 'chartUrl', 'chartBgcolor'],
   data: function () {
     return {
       datacollection: {
         labels: [],
         datasets: [{
           label: 'Total',
-          backgroundColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: '',
+          borderColor: 'rgb(0, 0, 0)',
+          borderWidth: 2,
           data: []
         }]
       },
       options: {
+        title: {
+          display: true,
+          text: ''
+        },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        },
         responsive: true,
         maintainAspectRatio: false
       }
     }
   },
-  mounted() {
-    this.datacollection.labels = this.chartLabel;
-    this.datacollection.datasets[0].data = this.chartData;
-    this.renderChart(this.datacollection, this.options)
+  created() {
+    this.getChartData();
   },
+  methods: {
+    getChartData() {
+      axios.get(this.chartUrl, {
+          params: {}
+        }).then((response) => {
+          this.datacollection.labels = response.data.label;
+          this.datacollection.datasets[0].data = response.data.data;
+          console.log(response);
+        }).catch((error) => {
+          console.log(error);
+        }).then(() => {
+          this.options.title.text = this.chartTitle;
+          this.datacollection.datasets[0].backgroundColor = this.chartBgcolor;
+          this.renderChart(this.datacollection, this.options);
+        });
+    },
+  }
 });
 
 var app = new Vue({
   el: '#app',
   data: {
-    loaded: false,
-    label: [],
-    data: [],
-  },
-  created() {
-    this.getCategory();
-  },
-  methods: {
-    async getCategory() {
-      this.loaded = false;
-      try {
-        const response = await axios.get('category/get-chart');
-        this.label = response.data.label;
-        this.data = response.data.data;
-        this.loaded = true;
-        console.log(response);
-      } catch (error) {
-        console.error(error);
-      }
+    category: {
+      id: 'category-chart',
+      title: 'Category Chart',
+      url: 'category/get-chart',
+      bgcolor: '#007bff',
     },
-  }
+    book: {
+      id: 'book-chart',
+      title: 'Book Chart',
+      url: 'book/get-chart',
+      bgcolor: '#28a745',
+    },
+  },
 });
 </script>
 @endpush

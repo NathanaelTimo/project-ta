@@ -17,6 +17,19 @@ class BookController extends Controller
         return DataTables::eloquent($model)->toJson();
     }
 
+    public function getChart(Request $req)
+    {
+        $label = Book::pluck('title');
+        $data = Book::pluck('qty');
+
+        $result = [
+            'label' => $label,
+            'data' => $data,
+        ];
+
+        return response()->json($result);
+    }
+
     public function index()
     {
         return view('pages.book.index');
