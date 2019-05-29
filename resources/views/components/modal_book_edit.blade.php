@@ -29,6 +29,11 @@
             <input type="text" class="form-control" v-model="qty" required>
             <div class="invalid-feedback">Required</div>
           </div>
+          <div class="form-group">
+            <label>Price</label>
+            <input type="text" class="form-control" v-model="price" required>
+            <div class="invalid-feedback">Required</div>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-primary">Save</button>

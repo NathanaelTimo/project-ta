@@ -32,6 +32,7 @@
                     <th>Title</th>
                     <th>Category</th>
                     <th>QTY</th>
+                    <th>Price</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -61,9 +62,10 @@ $(document).ready(function() {
       { data: 'title', name: 'title' },
       { data: 'categories.name', name: 'categories.name' },
       { data: 'qty', name: 'qty' },
+      { data: 'price', name: 'price' },
       /* ACTION */ {
         render: function (data, type, row) {
-          return "<button id='modal-edit' class='btn btn-sm btn-primary' data-id='"+row.id+"' data-title='"+row.title+"' data-categories-id='"+row.categories_id+"' data-qty='"+row.qty+"'>Edit</button>&nbsp;<button onclick='checkDelete("+row.id+")' class='btn btn-sm btn-danger'>Delete</button>";
+          return "<button id='modal-edit' class='btn btn-sm btn-primary' data-id='"+row.id+"' data-title='"+row.title+"' data-categories-id='"+row.categories_id+"' data-qty='"+row.qty+"' data-price='"+row.price+"'>Edit</button>&nbsp;<button onclick='checkDelete("+row.id+")' class='btn btn-sm btn-danger'>Delete</button>";
         }, orderable: false, searchable: false
       },
     ]
@@ -80,6 +82,7 @@ $(document).on('click', '#modal-edit',function() {
   app.title = ($(this).data('title'));
   app.categories_id = ($(this).data('categories-id'));
   app.qty = ($(this).data('qty'));
+  app.price = ($(this).data('price'));
   let obj = app.listCategories.find(o => o['id'] == app.categories_id);
   app.categories_id = obj;
   $("#modal-book-edit").modal('show');
@@ -114,6 +117,7 @@ var app = new Vue({
     title: '',
     categories_id: '',
     qty: '',
+    price: '',
     listCategories: [],
   },
   created() {
@@ -161,6 +165,7 @@ var app = new Vue({
           title: this.title,
           categories: this.categories_id,
           qty: this.qty,
+          price: this.price,
         });
         $('#modal-book-edit').modal('hide');
         $('#books-table').DataTable().ajax.reload();

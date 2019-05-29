@@ -62,6 +62,7 @@ class BookController extends Controller
             'title' => $req->title,
             'categories_id' => $req->categories['id'],
             'qty' => $req->qty,
+            'price' => $req->price,
         ]);
 
         return response()->json(['success' => true]);
