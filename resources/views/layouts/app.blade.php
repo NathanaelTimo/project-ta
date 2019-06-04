@@ -116,6 +116,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
     <script src="https://unpkg.com/vue-chartjs/dist/vue-chartjs.min.js"></script>
 
+    <!-- Global Components -->
+    <script type="text/javascript">
+        Vue.component('multiselect', window.VueMultiselect.default);
+    </script>
+
     @stack('scripts')
 </body>
 </html>

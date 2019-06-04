@@ -9,7 +9,8 @@
 
         <div class="card-body">
           <a href="{{ route('book.index') }}">Book</a><br>
-          <a href="{{ route('category.index') }}">Category</a>
+          <a href="{{ route('category.index') }}">Category</a><br>
+          <a href="{{ route('sale.index') }}">Sale</a>
           <bar-chart
             :chart-id="category.id"
             :chart-title="category.title"

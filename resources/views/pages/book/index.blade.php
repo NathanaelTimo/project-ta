@@ -103,7 +103,6 @@ function checkDelete(id) {
   })
 }
 
-Vue.component('multiselect', window.VueMultiselect.default);
 var app = new Vue({
   el: '#app',
   data: {

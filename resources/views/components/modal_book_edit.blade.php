@@ -15,6 +15,7 @@
             <div class="invalid-feedback">Required</div>
           </div>
           <div class="form-group">
+            <label>Category</label>
             <multiselect
               v-model="categories_id"
               :options="listCategories"

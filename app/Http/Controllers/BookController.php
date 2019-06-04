@@ -45,9 +45,11 @@ class BookController extends Controller
         //
     }
 
-    public function show(Book $book)
+    public function show($id)
     {
-        //
+        $model = Book::findOrFail($id);
+
+        return response()->json($model);
     }
 
     public function edit(Book $book)
