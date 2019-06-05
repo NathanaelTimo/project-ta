@@ -110,6 +110,15 @@
             timer: 1500
         });
     </script>
+    <!-- Moment -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script type="text/javascript">
+        Vue.filter('formatDate', function(value) {
+            if(value) {
+                return moment(String(value)).format('DD MMMM YYYY, HH:mm:ss')
+            }
+        });
+    </script>
     <!-- Vue-Multiselect -->
     <script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
     <!-- Vue-ChartJS -->

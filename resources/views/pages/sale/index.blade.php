@@ -15,16 +15,23 @@
           </div>
           <div class="form-group row">
             <div class="col-md-12">
-              <table class="table table-bordered" id="sales-table">
-                <thead>
-                  <tr>
-                    <th>No.</th>
-                    <th>Name</th>
-                    <th>Book(s) QTY</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-              </table>
+              <div class="accordion" id="accordionExample" v-if="isLoading">
+                <div class="card" v-for="(sale, index) in sales">
+                  <div class="card-header" :id="'heading'+index">
+                    <h2 class="mb-0">
+                      <button class="btn btn-link" type="button" data-toggle="collapse" :data-target="'#collapse'+index" aria-expanded="true" aria-controls="'collapse'+index">
+                        @{{ sale.customer_name }} - @{{ sale.created_at | formatDate }}
+                      </button>
+                    </h2>
+                  </div>
+                  <div :id="'collapse'+index" class="collapse" :aria-labelledby="'heading'+index" data-parent="#accordionExample">
+                    <div class="card-body">
+                      @{{ sale.books.title }} - [@{{ sale.books.categories.name }}]<br>
+                      @{{ sale.cost }}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -96,8 +103,11 @@ var app = new Vue({
     price: '',
     amount: '',
     cost: '',
+    sales: [],
+    isLoading: false,
   },
   created() {
+    this.getData();
     this.getBook();
   },
   methods: {
@@ -110,7 +120,8 @@ var app = new Vue({
             amount: this.amount,
             cost: this.cost,
           });
-          $("#modal-sale-create").modal('hide');
+          this.initForm();
+          $('#modal-sale-create').modal('hide');
           $('#sales-table').DataTable().ajax.reload();
           Toast.fire({
             type: 'success',
@@ -122,23 +133,7 @@ var app = new Vue({
         }
       }
       else {
-        $("#modal-sale-create").modal('show');
-      }
-    },
-    async update(id) {
-      try {
-        const response = await axios.patch('category/'+app.id, {
-          name: this.name,
-        });
-        $("#modal-category-edit").modal('hide');
-        $('#sales-table').DataTable().ajax.reload();
-        Toast.fire({
-          type: 'success',
-          title: 'Updated'
-        });
-        console.log(response);
-      } catch(error) {
-        console.error(error);
+        $('#modal-sale-create').modal('show');
       }
     },
     async delete(id) {
@@ -151,6 +146,16 @@ var app = new Vue({
         });
         console.log(response);
       } catch(error) {
+        console.error(error);
+      }
+    },
+    async getData() {
+      try {
+        const response = await axios.get('sale/get-data');
+        this.sales = response.data.data;
+        this.isLoading = true;
+        console.log(response);
+      } catch (error) {
         console.error(error);
       }
     },
@@ -172,6 +177,14 @@ var app = new Vue({
       } catch (error) {
         console.error(error);
       }
+    },
+    initForm() {
+      this.customer_name = '';
+      this.books = '',
+      this.qty = '';
+      this.price = '';
+      this.amount = '';
+      this.cost = '';
     },
     customLabel({title, categories}) {
       return `${title} - [${categories.name}]`;

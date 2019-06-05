@@ -52,11 +52,11 @@ Vue.component('bar-chart', {
           text: ''
         },
         scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
-            }]
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
         },
         responsive: true,
         maintainAspectRatio: false

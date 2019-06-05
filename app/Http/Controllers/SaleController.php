@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Book;
 use App\Models\Sale;
 use DataTables;
 
 class SaleController extends Controller
 {
-    public function getDatatables(Request $req)
+    public function getData(Request $req)
     {
-        $model = Sale::withCount('books');
+        $model = Sale::with(['books.categories']);
 
         return DataTables::eloquent($model)->toJson();
     }
@@ -35,6 +36,10 @@ class SaleController extends Controller
 
     public function store(Request $req)
     {
+        $book = Book::findOrFail($req->books_id);
+        $book->qty = $book->qty - $req->amount;
+        $book->save();
+
         Sale::create([
             'customer_name' => $req->customer_name,
             'books_id' => $req->books_id,

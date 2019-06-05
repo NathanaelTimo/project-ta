@@ -33,6 +33,11 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('get-chart', 'CategoryController@getChart');
 	});
 
+	Route::group(['prefix' => 'sale'], function() {
+		Route::get('get-data', 'SaleController@getData');
+		Route::get('get-chart', 'SaleController@getChart');
+	});
+
 	Route::apiResource('book', 'BookController');
 	Route::apiResource('category', 'CategoryController');
 	Route::apiResource('sale', 'SaleController');
