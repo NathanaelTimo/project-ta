@@ -27,7 +27,8 @@
                   <div :id="'collapse'+index" class="collapse" :aria-labelledby="'heading'+index" data-parent="#accordionExample">
                     <div class="card-body">
                       @{{ sale.books.title }} - [@{{ sale.books.categories.name }}]<br>
-                      @{{ sale.cost }}
+                      Amount: @{{ sale.amount }}<br>
+                      @{{ sale.cost | currency }}
                     </div>
                   </div>
                 </div>

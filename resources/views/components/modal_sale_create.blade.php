@@ -37,9 +37,8 @@
             </div>
             <div class="col-md-9">
               <div class="form-group">
-                <label>Price</label>
-                <input type="text" class="form-control" v-model="price" readonly>
-                <div class="invalid-feedback">Required</div>
+                <label>Price</label><br>
+                <span>@{{ price | currency }}</span>
               </div>
             </div>
           </div>
@@ -53,9 +52,8 @@
             </div>
             <div class="col-md-9">
               <div class="form-group">
-                <label>Cost</label>
-                <input type="text" class="form-control" v-model="cost" readonly>
-                <div class="invalid-feedback">Required</div>
+                <label>Cost</label><br>
+                <span>@{{ cost | currency }}</span>
               </div>
             </div>
           </div>

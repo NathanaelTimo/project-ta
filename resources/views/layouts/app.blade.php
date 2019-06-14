@@ -124,6 +124,20 @@
     <!-- Vue-ChartJS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
     <script src="https://unpkg.com/vue-chartjs/dist/vue-chartjs.min.js"></script>
+    <!-- Vue Currency Filter Dependency -->
+    <script src="https://unpkg.com/vue-currency-filter@3.2.3/dist/vue-currency-filter.iife.js"></script>
+    <script type="text/javascript">
+        if(VueCurrencyFilter) {
+            Vue.use(VueCurrencyFilter, {
+                symbol: "Rp",
+                thousandsSeparator: ".",
+                fractionCount: 0,
+                fractionSeparator: ".",
+                symbolPosition: "front",
+                symbolSpacing: false
+            })
+        }
+    </script>
 
     <!-- Global Components -->
     <script type="text/javascript">
