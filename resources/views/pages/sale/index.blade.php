@@ -3,36 +3,38 @@
 @section('content')
 <div class="container">
   <div class="row justify-content-center">
-    <div class="col-md-10">
+    <div class="col-md-12">
       <div class="card">
         <div class="card-header">Sale</div>
 
         <div class="card-body">
           <div class="form-group row">
-            <div class="col-md-3">
-              <button @click="create()" class="btn btn-primary">Create</button>
+            <label class="col-md-4 col-form-label text-md-right">File</label>
+            <div class="col-md-8">
+              <input type="file" id="file" class="btn btn-default" ref="file" @change="handleFileUpload()">
+              <button @click="submitFile()" class="btn btn-primary" :disabled="disabled">Import File</button>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6">
+              <a :href="url_download.xlsx" class="btn btn-warning float-right">Download Template XLSX</a>
             </div>
           </div>
           <div class="form-group row">
             <div class="col-md-12">
-              <div class="accordion" id="accordionExample" v-if="isLoading">
-                <div class="card" v-for="(sale, index) in sales">
-                  <div class="card-header" :id="'heading'+index">
-                    <h2 class="mb-0">
-                      <button class="btn btn-link" type="button" data-toggle="collapse" :data-target="'#collapse'+index" aria-expanded="true" aria-controls="'collapse'+index">
-                        @{{ sale.customer_name }} - @{{ sale.created_at | formatDate }}
-                      </button>
-                    </h2>
-                  </div>
-                  <div :id="'collapse'+index" class="collapse" :aria-labelledby="'heading'+index" data-parent="#accordionExample">
-                    <div class="card-body">
-                      @{{ sale.books.title }} - [@{{ sale.books.categories.name }}]<br>
-                      Amount: @{{ sale.amount }}<br>
-                      @{{ sale.cost | currency }}
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <table class="table table-bordered" id="sales-table">
+                <thead>
+                  <tr>
+                    <th>No.</th>
+                    <th>Invoice No.</th>
+                    <th>Invoice Date</th>
+                    <th>Customer Name</th>
+                    <th>Description</th>
+                    <th>Item</th>
+                    <th>QTY</th>
+                  </tr>
+                </thead>
+              </table>
             </div>
           </div>
         </div>
@@ -40,10 +42,6 @@
     </div>
   </div>
 </div>
-
-@component('components.modal_sale_create', ['title' => 'Create Sale'])
-@endcomponent
-
 @endsection
 
 @push('scripts')
@@ -52,159 +50,69 @@ $(document).ready(function() {
   var tables = $('#sales-table').DataTable({
     processing: true,
     serverSide: true,
-    ajax: 'category/get-datatables',
+    ajax: 'sale/get-data',
     order: [[ 1, 'asc' ]],
     columns: [
-      { data: 'id', name: 'id', searchable: false },
-      { data: 'name', name: 'name' },
-      { data: 'books_count', name: 'books_count', searchable: false },
-      /* ACTION */ {
-        render: function (data, type, row) {
-          return "<button id='modal-edit' class='btn btn-sm btn-primary' data-id='"+row.id+"' data-name='"+row.name+"'>Edit</button>&nbsp;<button onclick='checkDelete("+row.id+")' class='btn btn-sm btn-danger'>Delete</button>";
-        }, orderable: false, searchable: false
+      { data: null, name: null, searchable: false, orderable: false },
+      { data: 'no_invoice', name: 'no_invoice' },
+      { data: 'date_invoice', name: 'date_invoice',
+        render: function(data) {
+          return moment(data).format('DD MMM YYYY');
+        }
       },
+      { data: 'customer_name', name: 'customer_name' },
+      { data: 'description', name: 'description' },
+      { data: 'items.name', name: 'items.name' },
+      { data: 'qty', name: 'qty' },
     ]
   });
-  tables.on('order.dt search.dt', function () {
-    tables.column(0, {search:'applied', order:'applied'}).nodes().each(function (cell, i) {
-      cell.innerHTML = i+1;
-    });
-  }).draw();
+  tables.on('draw.dt', function () {
+      var info = tables.page.info();
+      tables.column(0, { search: 'applied', order: 'applied', page: 'applied' }).nodes().each(function (cell, i) {
+          cell.innerHTML = i + 1 + info.start;
+      });
+  });
 });
-
-$(document).on('click', '#modal-edit',function() {
-  app.id = ($(this).data('id'));
-  app.name = ($(this).data('name'));
-  $("#modal-category-edit").modal('show');
-});
-
-function checkDelete(id) {
-  Swal.fire({
-    title: 'Are you sure?',
-    type: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Yes'
-  }).then((result) => {
-    if(result.value) {
-      app.delete(id);
-    }
-  })
-}
 
 var app = new Vue({
   el: '#app',
   data: {
-    id: '',
-    customer_name: '',
-    books: '',
-    listBooks: [],
-    qty: '',
-    price: '',
-    amount: '',
-    cost: '',
-    sales: [],
-    isLoading: false,
+    file: '',
+    disabled: true,
+    url_download: {
+      xlsx: '/sale/download-template-xlsx',
+    },
   },
   created() {
-    this.getData();
-    this.getBook();
   },
   methods: {
-    async create(submit) {
-      if(submit) {
-        try {
-          const response = await axios.post('sale', {
-            customer_name: this.customer_name,
-            books_id: this.books.id,
-            amount: this.amount,
-            cost: this.cost,
-          });
-          this.initForm();
-          $('#modal-sale-create').modal('hide');
-          $('#sales-table').DataTable().ajax.reload();
-          Toast.fire({
-            type: 'success',
-            title: 'Created'
-          });
-          console.log(response);
-        } catch(error) {
-          console.error(error);
+    async submitFile() {
+      let formData = new FormData();
+      formData.append('file', this.file);
+      const { data } = await axios.post('sale/import', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
         }
-      }
-      else {
-        $('#modal-sale-create').modal('show');
-      }
-    },
-    async delete(id) {
-      try {
-        const response = await axios.delete('category/'+id);
-        $('#sales-table').DataTable().ajax.reload();
+      })
+      if(data.success) {
         Toast.fire({
           type: 'success',
-          title: 'Deleted'
+          title: 'Imported'
         });
-        console.log(response);
-      } catch(error) {
-        console.error(error);
+        $('#sales-table').DataTable().ajax.reload();
+      }
+      else {
+        alert('error');
+        console.log(data.console);
       }
     },
-    async getData() {
-      try {
-        const response = await axios.get('sale/get-data');
-        this.sales = response.data.data;
-        this.isLoading = true;
-        console.log(response);
-      } catch (error) {
-        console.error(error);
+    handleFileUpload: function() {
+      this.file = this.$refs.file.files[0];
+      if(this.file) {
+        this.disabled = false;
       }
     },
-    async getBook() {
-      try {
-        const response = await axios.get('book/get-data');
-        this.listBooks = response.data.data;
-        console.log(response);
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    async getDetail() {
-      try {
-        const response = await axios.get('book/'+this.books.id);
-        this.qty = response.data.qty;
-        this.price = response.data.price;
-        console.log(response);
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    initForm() {
-      this.customer_name = '';
-      this.books = '',
-      this.qty = '';
-      this.price = '';
-      this.amount = '';
-      this.cost = '';
-    },
-    customLabel({title, categories}) {
-      return `${title} - [${categories.name}]`;
-    }
   },
-  computed: {
-    checkQty() {
-      if(this.qty < this.amount) {
-        this.amount = '';
-        return alert('Quantity is not enough');
-      }
-    }
-  },
-  watch: {
-    amount: function(val) {
-      this.cost = val * this.price;
-      this.checkQty;
-    }
-  }
 })
 </script>
 @endpush

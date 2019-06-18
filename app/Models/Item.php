@@ -4,13 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Category extends Model
+class Item extends Model
 {
     protected $guarded = ['id'];
     public $timestamps = false;
-
-    public function books()
-    {
-    	return $this->hasMany('App\Models\Book', 'categories_id', 'id');
-    }
 }

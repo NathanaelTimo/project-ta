@@ -12,13 +12,15 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // $this->call(UsersTableSeeder::class);
-        DB::table('categories')->insert([
-            ['name' => 'Art'],
-            ['name' => 'Comic book'],
-            ['name' => 'Fiction'],
-            ['name' => 'Health'],
-            ['name' => 'History'],
-            ['name' => 'Science fiction']
+        DB::table('items')->insert([
+            ['name' => '1 More E1001 Triple Driver IEM'],
+            ['name' => '1 More E1001 Triple Driver IEM (Demo)'],
+            ['name' => '1 More Piston Fit'],
+            ['name' => 'ALO Litz MMCX 2.5'],
+            ['name' => 'ATH-AR1iS'],
+            ['name' => 'ATH-DSR7BT Black'],
+            ['name' => 'ATH-LS50iS Black'],
+            ['name' => 'ATH-LS70iS Black'],
         ]);
     }
 }

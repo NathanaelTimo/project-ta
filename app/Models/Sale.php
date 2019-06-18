@@ -3,15 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Sale extends Model
 {
-    use SoftDeletes;
     protected $guarded = ['id'];
+    public $timestamps = false;
 
-    public function books()
+    public function items()
     {
-    	return $this->belongsTo('App\Models\Book', 'books_id', 'id');
+    	return $this->belongsTo('App\Models\Item', 'items_id', 'id');
     }
 }

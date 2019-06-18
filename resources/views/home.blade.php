@@ -3,14 +3,11 @@
 @section('content')
 <div class="container">
   <div class="row justify-content-center">
-    <div class="col-md-10">
+    <div class="col-md-12">
       <div class="card">
         <div class="card-header">Dashboard</div>
 
         <div class="card-body">
-          <a href="{{ route('book.index') }}">Book</a><br>
-          <a href="{{ route('category.index') }}">Category</a><br>
-          <a href="{{ route('sale.index') }}">Sale</a>
           <bar-chart
             :chart-id="category.id"
             :chart-title="category.title"
@@ -64,7 +61,7 @@ Vue.component('bar-chart', {
     }
   },
   created() {
-    this.getChartData();
+    //this.getChartData();
   },
   methods: {
     getChartData() {

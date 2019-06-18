@@ -15,14 +15,16 @@ class CreateSalesTable extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('no_invoice');
+            $table->date('date_invoice');
             $table->string('customer_name');
-            $table->unsignedInteger('books_id');
-            $table->unsignedInteger('amount');
-            $table->unsignedInteger('cost');
-            $table->timestamps();
-            $table->softDeletes();
+            $table->string('description')->nullable();
+            $table->unsignedInteger('items_id');
+            $table->unsignedInteger('qty');
+            $table->unsignedInteger('price')->nullable();
+            $table->unsignedInteger('total')->nullable();
 
-            $table->foreign('books_id')->references('id')->on('books');
+            $table->foreign('items_id')->references('id')->on('items');
         });
     }
 

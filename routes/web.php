@@ -20,25 +20,12 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['middleware' => 'auth'], function () {
-	Route::group(['prefix' => 'book'], function() {
-		Route::get('get-data', 'BookController@getData');
-		Route::get('get-chart', 'BookController@getChart');
-		Route::post('import', 'BookController@import');
-		Route::get('download-template-xlsx', 'BookController@downloadTemplateXlsx');
-		Route::get('download-template-csv', 'BookController@downloadTemplateCsv');
-	});
-
-	Route::group(['prefix' => 'category'], function() {
-		Route::get('get-datatables', 'CategoryController@getDatatables');
-		Route::get('get-chart', 'CategoryController@getChart');
-	});
-
 	Route::group(['prefix' => 'sale'], function() {
 		Route::get('get-data', 'SaleController@getData');
 		Route::get('get-chart', 'SaleController@getChart');
+		Route::post('import', 'SaleController@import');
+		Route::get('download-template-xlsx', 'SaleController@downloadTemplateXlsx');
 	});
 
-	Route::apiResource('book', 'BookController');
-	Route::apiResource('category', 'CategoryController');
 	Route::apiResource('sale', 'SaleController');
 });
