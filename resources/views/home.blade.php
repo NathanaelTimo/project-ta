@@ -9,16 +9,11 @@
 
         <div class="card-body">
           <bar-chart
-            :chart-id="category.id"
-            :chart-title="category.title"
-            :chart-url="category.url"
-            :chart-bgcolor="category.bgcolor">
-          </bar-chart>
-          <bar-chart
-            :chart-id="book.id"
-            :chart-title="book.title"
-            :chart-url="book.url"
-            :chart-bgcolor="book.bgcolor">            
+            :chart-id="sale.id"
+            :chart-title="sale.title"
+            :chart-url="sale.url"
+            :chart-bgcolor="sale.bgcolor">
+          </bar-chart>           
         </div>
       </div>
     </div>
@@ -61,7 +56,7 @@ Vue.component('bar-chart', {
     }
   },
   created() {
-    //this.getChartData();
+    this.getChartData();
   },
   methods: {
     getChartData() {
@@ -85,17 +80,11 @@ Vue.component('bar-chart', {
 var app = new Vue({
   el: '#app',
   data: {
-    category: {
-      id: 'category-chart',
-      title: 'Category Chart',
-      url: 'category/get-chart',
+    sale: {
+      id: 'sale-chart',
+      title: 'Sale Chart',
+      url: 'sale/get-chart',
       bgcolor: '#007bff',
-    },
-    book: {
-      id: 'book-chart',
-      title: 'Book Chart',
-      url: 'book/get-chart',
-      bgcolor: '#28a745',
     },
   },
 });

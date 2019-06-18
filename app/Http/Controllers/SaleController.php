@@ -19,8 +19,10 @@ class SaleController extends Controller
 
     public function getChart(Request $req)
     {
-        $label = Sale::withCount('books')->pluck('name');
-        $data = Sale::withCount('books')->pluck('books_count');
+        $label = Sale::with(['items'])->select('items_id')->groupBy('items_id')->get()->pluck('items.name');
+        $data = Sale::get()->groupBy('items_id')->map(function($row) {
+            return $row->sum('qty');
+        })->values();
 
         $result = [
             'label' => $label,
