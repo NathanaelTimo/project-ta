@@ -17,15 +17,17 @@ class SalesImport implements ToModel, WithHeadingRow, WithBatchInserts, WithChun
     public function model(array $row)
     {
         $item = $row['item'];
-        $items = Item::where('name', 'LIKE', "%$item%")->first();
+        $items = Item::firstOrCreate(['name' => $item]);
+        $items_id = $items ? $items->id : null;
 
         return new Sale([
             'no_invoice' => $row['invoice_no'],
             'date_invoice' => getFormatDate($row['invoice_date']),
             'customer_name' => $row['customer_name'],
             'description' => $row['description'],
-            'items_id' => $items->id,
+            'items_id' => $items_id,
             'qty' => $row['qty'],
+            'total' => $row['total'],
         ]);
     }
 

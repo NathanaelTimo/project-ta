@@ -19,7 +19,7 @@ class CreateSalesTable extends Migration
             $table->date('date_invoice');
             $table->string('customer_name');
             $table->string('description')->nullable();
-            $table->unsignedInteger('items_id');
+            $table->unsignedInteger('items_id')->nullable();
             $table->unsignedInteger('qty');
             $table->unsignedInteger('price')->nullable();
             $table->unsignedInteger('total')->nullable();

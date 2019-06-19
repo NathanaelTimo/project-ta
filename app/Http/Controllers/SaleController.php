@@ -12,15 +12,15 @@ class SaleController extends Controller
 {
     public function getData(Request $req)
     {
-        $model = Sale::with(['items'])->select('sales.*');
+        $model = Sale::with(['item'])->select('sales.*');
 
         return DataTables::eloquent($model)->toJson();
     }
 
     public function getChart(Request $req)
     {
-        $label = Sale::with(['items'])->select('items_id')->groupBy('items_id')->get()->pluck('items.name');
-        $data = Sale::get()->groupBy('items_id')->map(function($row) {
+        $label = Sale::with(['item'])->select('items_id')->whereMonth('date_invoice', 1)->groupBy('items_id')->orderBy('items_id')->get()->pluck('item.name');
+        $data = Sale::orderBy('items_id')->whereMonth('date_invoice', 1)->get()->groupBy('items_id')->map(function($row) {
             return $row->sum('qty');
         })->values();
 

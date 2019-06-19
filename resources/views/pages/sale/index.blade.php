@@ -6,7 +6,6 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">Sale</div>
-
         <div class="card-body">
           <div class="form-group row">
             <label class="col-md-4 col-form-label text-md-right">File</label>
@@ -32,6 +31,7 @@
                     <th>Description</th>
                     <th>Item</th>
                     <th>QTY</th>
+                    <th>Total</th>
                   </tr>
                 </thead>
               </table>
@@ -50,7 +50,7 @@ $(document).ready(function() {
   var tables = $('#sales-table').DataTable({
     processing: true,
     serverSide: true,
-    ajax: 'sale/get-data',
+    ajax: '/sale/get-data',
     order: [[ 1, 'asc' ]],
     columns: [
       { data: null, name: null, searchable: false, orderable: false },
@@ -62,8 +62,11 @@ $(document).ready(function() {
       },
       { data: 'customer_name', name: 'customer_name' },
       { data: 'description', name: 'description' },
-      { data: 'items.name', name: 'items.name' },
+      { data: 'item.name', name: 'item.name' },
       { data: 'qty', name: 'qty' },
+      { data: 'total', name: 'total',
+        render: $.fn.dataTable.render.number('.', ',', 0, 'Rp')
+      },
     ]
   });
   tables.on('draw.dt', function () {
@@ -89,7 +92,7 @@ var app = new Vue({
     async submitFile() {
       let formData = new FormData();
       formData.append('file', this.file);
-      const { data } = await axios.post('sale/import', formData, {
+      const { data } = await axios.post('/sale/import', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

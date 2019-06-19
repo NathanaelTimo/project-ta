@@ -6,14 +6,24 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">Dashboard</div>
-
         <div class="card-body">
-          <bar-chart
-            :chart-id="sale.id"
-            :chart-title="sale.title"
-            :chart-url="sale.url"
-            :chart-bgcolor="sale.bgcolor">
-          </bar-chart>           
+          <div class="row">
+            <div class="col-md-3">
+              <select>
+                <option></option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <bar-chart
+                :chart-id="sale.id"
+                :chart-title="sale.title"
+                :chart-url="sale.url"
+                :chart-bgcolor="sale.bgcolor">
+              </bar-chart>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -31,7 +41,7 @@ Vue.component('bar-chart', {
       datacollection: {
         labels: [],
         datasets: [{
-          label: 'Total',
+          label: 'Grand QTY',
           backgroundColor: '',
           borderColor: 'rgb(0, 0, 0)',
           borderWidth: 2,

@@ -9,7 +9,7 @@ class Sale extends Model
     protected $guarded = ['id'];
     public $timestamps = false;
 
-    public function items()
+    public function item()
     {
     	return $this->belongsTo('App\Models\Item', 'items_id', 'id');
     }
