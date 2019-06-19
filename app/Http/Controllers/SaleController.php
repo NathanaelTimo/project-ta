@@ -17,21 +17,6 @@ class SaleController extends Controller
         return DataTables::eloquent($model)->toJson();
     }
 
-    public function getChart(Request $req)
-    {
-        $label = Sale::with(['item'])->select('items_id')->whereMonth('date_invoice', 1)->groupBy('items_id')->orderBy('items_id')->get()->pluck('item.name');
-        $data = Sale::orderBy('items_id')->whereMonth('date_invoice', 1)->get()->groupBy('items_id')->map(function($row) {
-            return $row->sum('qty');
-        })->values();
-
-        $result = [
-            'label' => $label,
-            'data' => $data,
-        ];
-
-        return response()->json($result);
-    }
-
     public function index()
     {
         return view('pages.sale.index');

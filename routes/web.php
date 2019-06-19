@@ -21,10 +21,15 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['middleware' => 'auth'], function () {
 	Route::group(['prefix' => 'sale'], function() {
-		Route::get('get-data', 'SaleController@getData');
-		Route::get('get-chart', 'SaleController@getChart');
-		Route::post('import', 'SaleController@import');
-		Route::get('download-template-xlsx', 'SaleController@downloadTemplateXlsx');
+		Route::get('/get-data', 'SaleController@getData');
+		Route::post('/import', 'SaleController@import');
+		Route::get('/download-template-xlsx', 'SaleController@downloadTemplateXlsx');
+	});
+
+	Route::group(['prefix' => 'statistic'], function() {
+		Route::get('/get-chart', 'HomeController@getChart');
+		Route::get('/get-top-item', 'HomeController@getTopItem');
+		Route::get('/get-top-customer', 'HomeController@getTopCustomer');
 	});
 
 	Route::apiResource('sale', 'SaleController');
