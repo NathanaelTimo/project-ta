@@ -11,6 +11,6 @@ class Sale extends Model
 
     public function item()
     {
-    	return $this->belongsTo('App\Models\Item', 'items_id', 'id');
+    	return $this->belongsTo('App\Models\Item', 'items_id', 'id')->orderBy('id');
     }
 }

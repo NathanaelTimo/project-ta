@@ -41,10 +41,10 @@
           <div class="row">
             <div class="col-md-12">
               <bar-chart
+                v-if="loaded"
                 :chart-id="sale.id"
-                :chart-title="sale.title"
-                :chart-url="sale.url"
-                :chart-bgcolor="sale.bgcolor">
+                :chart-data="datacollection"
+                :chart-options="options">
               </bar-chart>
             </div>
           </div>
@@ -57,58 +57,12 @@
 
 @push('scripts')
 <script type="text/javascript">
-Vue.component('bar-chart', {
+var barChart = Vue.component('bar-chart', {
   extends: VueChartJs.Bar,
-  props: ['chartTitle', 'chartUrl', 'chartBgcolor'],
-  data: function () {
-    return {
-      datacollection: {
-        labels: [],
-        datasets: [{
-          label: 'Grand QTY',
-          backgroundColor: '',
-          borderColor: 'rgb(0, 0, 0)',
-          borderWidth: 2,
-          data: []
-        }]
-      },
-      options: {
-        title: {
-          display: true,
-          text: ''
-        },
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }]
-        },
-        responsive: true,
-        maintainAspectRatio: false
-      }
-    }
+  props: ['chartData', 'chartOptions'],
+  mounted() {
+    this.renderChart(this.chartData, this.chartOptions);
   },
-  created() {
-    this.getChartData();
-  },
-  methods: {
-    getChartData() {
-      axios.get(this.chartUrl, {
-          params: {}
-        }).then((response) => {
-          this.datacollection.labels = response.data.label;
-          this.datacollection.datasets[0].data = response.data.data;
-          console.log(response);
-        }).catch((error) => {
-          console.log(error);
-        }).then(() => {
-          this.options.title.text = this.chartTitle;
-          this.datacollection.datasets[0].backgroundColor = this.chartBgcolor;
-          this.renderChart(this.datacollection, this.options);
-        });
-    },
-  }
 });
 
 var app = new Vue({
@@ -118,23 +72,52 @@ var app = new Vue({
       item: 0,
       customer: '',
     },
+    loaded: false,
+    datacollection: {
+      labels: [],
+      datasets: [{
+        label: 'Grand QTY',
+        backgroundColor: '#007bff',
+        borderColor: 'rgb(0, 0, 0)',
+        borderWidth: 2,
+        data: []
+      }]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Sale Chart',
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      },
+      responsive: true,
+      maintainAspectRatio: false
+    },
     sale: {
       id: 'sale-chart',
-      title: 'Sale Chart',
       url: '/statistic/get-chart',
-      bgcolor: '#007bff',
     },
     listMonths: moment.months(),
     month: 'all',
   },
-  created() {
+  mounted() {
     this.getTopItem();
     this.getTopCustomer();
+    this.getChartData();
   },
   methods: {
     async getTopItem() {
       try {
-        const response = await axios.get('/statistic/get-top-item');
+        const response = await axios.get('/statistic/get-top-item', {
+          params: {
+            month: this.month,
+          }
+        });
         this.top.item = response.data;
         console.log(response);
       } catch (error) {
@@ -143,18 +126,39 @@ var app = new Vue({
     },
     async getTopCustomer() {
       try {
-        const response = await axios.get('/statistic/get-top-customer');
+        const response = await axios.get('/statistic/get-top-customer', {
+          params: {
+            month: this.month,
+          }
+        });
         this.top.customer = response.data;
         console.log(response);
       } catch (error) {
         console.error(error);
       }
     },
-    getMonth() {
-      if(this.month != 'all') {
-        this.month = this.month+1;
+    async getChartData() {
+      this.loaded = false;
+      try {
+        const response = await axios.get(this.sale.url, {
+          params: {
+            month: this.month,
+          }
+        });
+        let label = response.data.label;
+        let data = response.data.data;
+        this.datacollection.labels = label;
+        this.datacollection.datasets[0].data = data;
+        this.loaded = true;
+        console.log(response);
+      } catch (error) {
+        console.error(error);
       }
-      console.log(this.month);
+    },
+    getMonth() {
+      this.getTopItem();
+      this.getTopCustomer();
+      this.getChartData();
     }
   }
 });
