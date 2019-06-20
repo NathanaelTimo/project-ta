@@ -73,7 +73,8 @@ class HomeController extends Controller
     protected function chartLabel($month)
     {
         $model = Sale::with(['item'])
-            ->select('items_id');
+            ->select('items_id')
+            ->orderBy('items_id');
 
         if($month != 'all') {
             $model->whereMonth('date_invoice', $month);
